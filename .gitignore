@@ -1,0 +1,10 @@
+
+*.pyc
+
+Lib/
+
+*.mat
+
+Scripts/
+
+RawData/
