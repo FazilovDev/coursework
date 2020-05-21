@@ -1,58 +1,64 @@
 # %%
 from HDF.HDFData import HDFArray
-path = "./FilteredData/"
-
-# %%
-file = HDFArray(path + '0.h5')
-print(file.ListChannels())
-
-# %%
-fd = file.getChannelTable('FD')[1]
-print(len(fd))
-for i in range(1000):
-    print(fd[i])
-#%%
-
 import matplotlib.pyplot as plt
-plt.plot(fd)
-# %%
+import peakdetect as pkd
+import os.path
+import math
+from Analyzer import *
+path = './FilteredData/'
 
-print(len(file.getChannelTable('TRACK_MARKERS')[1]))
-print(len(file.getChannelTable('FD')[1]))
+
+f = FileAnalyzer(path + '2.h5')
+time = []
+intervals = f.get_intervals()
+for interval in intervals:
+    time.append(interval.get_characteristics()[1])
+plt.plot(time)
+
+#%%
+file = FileAnalyzer(path + '5.h5')
+intervals = file.get_intervals()
+print(intervals)
+print('speed  time  accuracy')
+for interval in intervals:
+    ch = interval.get_characterictics()
+    print(ch[0], ch[1], ch[2])
+f=None
+print(f is not None)
+
+#%%
+file1 = FileAnalyzer(path + '5.h5')
+peaks = file1.get_max_peaks_fd_channel()
+print('count peaks = ', len(peaks[0]))
+print('count synchro = ', file1.get_count_synchrostimuls())
+print('count_click = ', file1.get_count_click())
+file1.plot_fd_channel(0,1000) 
+file1.get_history()
+#%%
+count_files = sum(os.path.isfile(os.path.join(path, f)) for f in os.listdir(path))
+print('all files = ', count_files)
+good_files = []
+for i in range(count_files):
+    filename = path + str(i) + '.h5'
+    print(filename)
+    file = FileAnalyzer(filename)
+    if (file.is_good_file()):
+        good_files.append(filename)
+print('good files = ', len(good_files))
 
 # %%
-table_track = file.getChannelTable('TRACK_MARKERS')
-print(table_track)
-print(type(table_track[1]))
-track = table_track[1]
-eeg = file.getChannelTable('EEG')
-print(eeg)
-# %%
-print(len(track[0]))
-matrix = track[1]
-for i in range(500):
-    print(track[i])
+def get_intervals_from_file(file_analyzer):
+    if (type(file_analyzer) is not FileAnalyzer):
+        return
+    count_intervals = file_analyzer.get_count_synchrostimuls()
+    intervals = []
+    for i in range(count_intervals):
+
+
+
+#%%
+f = FileAnalyzer(path + '1.h5')
+a=  10
+print(type(a) is not FileAnalyzer)
 
 # %%
-filtered_track = []
-isMove = False
-start = 0
-stop = 0
-time_start = 0
-time_stop = 0
-count = 0
-for i in range(2, len(track)):
-    if (track[i][1] == 16000):
-        start = i
-        filtered_track.append(track[i])
-        time_start = track[i][0]
-    elif (track[i][1] == 2):
-        filtered_track.append(track[i])
-        stop = i
-        time_stop = track[i][0]
-        count += 1
-        print("dif = ", stop-start)
-        print("time = ", time_stop-time_start)
-print(time_stop, time_start)
-c = 0
-

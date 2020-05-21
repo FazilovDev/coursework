@@ -3,6 +3,8 @@ from HDF.HDFData import HDFArray
 
 path = "./RawData/"
 
+
+# опытным путем пришел к выводу, что данных номеров файлов нет среди данных
 ban_files = [366, 269, 345, 344, 326, 325]
 #for i in range(245, 368):
 #    if (i not in ban_files):
