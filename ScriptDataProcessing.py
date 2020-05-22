@@ -7,7 +7,7 @@ import math
 from Analyzer import *
 path = './FilteredData/'
 
-
+#%%
 f = FileAnalyzer(path + '2.h5')
 time = []
 intervals = f.get_intervals()

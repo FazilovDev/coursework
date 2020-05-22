@@ -10,3 +10,7 @@ Scripts/
 RawData/
 
 FilteredData/
+
+.ipynb_checkpoints/
+
+Dataset/

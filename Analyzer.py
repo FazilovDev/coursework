@@ -5,7 +5,6 @@ import math
 import numpy as np
 import csv
 
-PATH = 'ds'
 
 class IntervalExperiment:
     def __init__(self,obj_pos, eeg, ecg, pnvm, fd, track):
@@ -71,6 +70,11 @@ class IntervalExperiment:
             reaction_speed = 0
         return [reaction_speed, reaction_time, move_speed, move_time, accuracy_click]
     
+    def is_good(self):
+        if (len(self.track) < 2):
+            return False
+        return True
+
     def get_characteristics(self):
         return [self.reaction_speed, self.reaction_time, self.move_speed, self.move_time, self.accuracy_click]
 
@@ -88,13 +92,12 @@ class IntervalExperiment:
         with open(filename, "w", newline='') as out_file:
             fieldnames = ['Fp1', 'Fpz', 'Fp2', 'F7', 'F3', 'Fz', 'F4', 'F8', 'T3', 'C3', 'Cz', 'C4', 'T4', 'T5',
              'P3', 'Pz', 'P4', 'T6', 'O1', 'Oz', 'O2', 'ecg', 'pnvm', 'fd']
-            writer = csv.DictWriter(out_file, delimiter=';', fieldnames=fieldnames)
-            writer.writeheader()
+            writer = csv.writer(out_file, delimiter=';')
             data = np.hstack((self.eeg, np.atleast_2d(self.ecg)))
             data = np.hstack((data, np.atleast_2d(self.pnvm)))
-            data = list(np.hstack((data, np.atleast_2d(self.fd))))
-            for row in data:
-                writer.writerow(row)
+            data = np.hstack((data, np.atleast_2d(self.fd)))
+            data = data.tolist()
+            writer.writerows(data)
 
 # 'Fp1', 'Fpz', 'Fp2', 'F7', 'F3', 'Fz', 'F4', 'F8', 'T3', 'C3', 'Cz', 'C4', 'T4', 'T5', 'P3', 'Pz', 'P4', 'T6', 'O1', 'Oz', 'O2'
 # 'ecg'
@@ -186,9 +189,6 @@ class FileAnalyzer:
         return IntervalExperiment(obj_pos,int_eeg, int_ecg,int_pnvm, int_fd, int_track)
 
     def __eval_intervals(self):
-        start_stimul = None
-        end_stimul = None
-        is_true_start = False
         count_stim = self.count_stimuls
         stimuls = []
         for i in range(len(self.track)):
@@ -212,11 +212,16 @@ class FileAnalyzer:
         #print('min length interval = ', min_length_interval)
         return min_length_interval
 
-    def trim_intervals_and_save(self, id_begin_interval, min_length_interval):
+    def trim_intervals_and_save(self,path, id_begin_interval, min_length_interval):
         _id = id_begin_interval
+        y = []
         for interval in self.intervals:
-            interval.trim(0, min_length_interval)
-            filename = PATH + str(_id) +'.csv'
-            _id += 1
-            interval.save_to_csv(filename)
+            if (interval.is_good()):
+                interval.trim(0, min_length_interval)
+                filename = path + str(_id) + '.csv'
+                interval.save_to_csv(filename)
+                characteristics = interval.get_characteristics()
+                y.append(np.array([_id, characteristics[0], characteristics[1]]))
+                _id += 1
+        return np.array(y)
 
