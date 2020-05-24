@@ -5,7 +5,8 @@ import peakdetect as pkd
 import os.path
 import math
 from Analyzer import *
-path = './FilteredData/'
+from config import settings
+path = settings["paths"]["filtered"]
 
 #%%
 f = FileAnalyzer(path + '2.h5')
@@ -53,6 +54,7 @@ def get_intervals_from_file(file_analyzer):
     count_intervals = file_analyzer.get_count_synchrostimuls()
     intervals = []
     for i in range(count_intervals):
+        pass
 
 
 

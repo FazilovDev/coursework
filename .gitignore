@@ -14,3 +14,9 @@ FilteredData/
 .ipynb_checkpoints/
 
 Dataset/
+
+config.py
+
+virtualenv
+
+.idea

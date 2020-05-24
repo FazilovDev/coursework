@@ -1,0 +1,7 @@
+settings = {
+    "paths": {
+        "raw": './RawData/',
+        "filtered": './FilteredData/',
+        "train": '.\\dataset\\train\\'
+    }
+}

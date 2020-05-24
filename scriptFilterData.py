@@ -1,8 +1,15 @@
+# -*- coding: utf8 -*-
 # %%
+"""
+Этот скрипт копирует из папки config.settings.paths.raw в filtered
+те файлы, в которых есть все необходимые таблицы
+'EEG', 'TRACK_MARKERS', 'ECG', 'FD', 'PNVM'
+"""
 from HDF.HDFData import HDFArray
 
-path = "./RawData/"
-
+from config import settings
+path = settings["paths"]["raw"]
+filteredPath = settings["paths"]["filtered"]
 
 # опытным путем пришел к выводу, что данных номеров файлов нет среди данных
 ban_files = [366, 269, 345, 344, 326, 325]
@@ -36,6 +43,6 @@ print("all good files = ", good_files)
 # %%
 import shutil
 for i in range(good_files):
-    shutil.copy2(path + files[i], 'FilteredData/'+str(i)+'.h5', follow_symlinks=True)
+    shutil.copy2(path + files[i], filteredPath+str(i)+'.h5', follow_symlinks=True)
     print('copy good')
 
