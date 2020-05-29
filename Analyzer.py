@@ -79,7 +79,7 @@ class IntervalExperiment:
         return [self.reaction_speed, self.reaction_time, self.move_speed, self.move_time, self.accuracy_click]
 
     def get_length(self):
-        return self.size_interval
+        return len(self.fd)
     
     def trim(self, a, b):
         self.eeg = self.eeg[a:b]
